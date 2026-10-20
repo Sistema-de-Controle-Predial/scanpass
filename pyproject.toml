@@ -1,0 +1,8 @@
+[project]
+name = "S.C.E.P"
+version = "0.1.0"
+description = "Descrição do projeto"
+requires-python = ">=3.12"
+
+[tool.setuptools.packages.find]
+where = ["src"]
