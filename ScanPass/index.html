@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ScanPass</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <header class="topo">
+    <h1>Scan<span>Pass</span></h1>
+    <div class="status" id="status-conexao">● Conectando...</div>
+  </header>
+
+  <main class="container">
+
+    <!-- Estatísticas -->
+    <section class="cards">
+      <div class="card">
+        <small>Entradas hoje</small>
+        <strong id="total-entradas">0</strong>
+      </div>
+      <div class="card">
+        <small>Saídas hoje</small>
+        <strong id="total-saidas">0</strong>
+      </div>
+      <div class="card">
+        <small>Veículos no prédio</small>
+        <strong id="total-dentro">0</strong>
+      </div>
+    </section>
+
+    <div class="grid">
+
+      <!-- Leitor de QR Code -->
+      <section class="painel">
+        <h2>Leitor de QR Code</h2>
+
+        <div class="tipo-acesso">
+          <label><input type="radio" name="tipo" value="entrada" checked /> Entrada</label>
+          <label><input type="radio" name="tipo" value="saida" /> Saída</label>
+        </div>
+
+        <div id="leitor"></div>
+
+        <div class="botoes">
+          <button id="btn-iniciar">Iniciar câmera</button>
+          <button id="btn-parar" class="secundario" disabled>Parar</button>
+        </div>
+
+        <div class="manual">
+          <input type="text" id="input-manual" placeholder="Ou digite o código do QR manualmente" />
+          <button id="btn-manual">Registrar</button>
+        </div>
+
+        <div id="resultado" class="resultado oculto"></div>
+      </section>
+
+      <!-- Histórico -->
+      <section class="painel">
+        <h2>Últimos acessos</h2>
+
+        <div class="filtros">
+          <input type="text" id="busca" placeholder="Buscar por placa ou morador..." />
+          <select id="filtro-tipo">
+            <option value="">Todos</option>
+            <option value="entrada">Entradas</option>
+            <option value="saida">Saídas</option>
+          </select>
+        </div>
+
+        <div class="tabela-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Hora</th>
+                <th>Placa</th>
+                <th>Morador</th>
+                <th>Tipo</th>
+              </tr>
+            </thead>
+            <tbody id="tabela-registros">
+              <tr><td colspan="4" class="vazio">Carregando...</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+    </div>
+  </main>
+
+  <!-- Biblioteca de leitura de QR pela câmera do navegador -->
+  <script src="https://unpkg.com/html5-qrcode"></script>
+  <script src="script.js"></script>
+</body>
+</html>
