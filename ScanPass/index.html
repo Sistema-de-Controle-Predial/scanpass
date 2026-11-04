@@ -30,6 +30,39 @@
       </div>
     </section>
 
+    <!-- Dashboard -->
+    <section class="dashboard">
+      <div class="painel">
+        <h2>Acessos por hora <small id="pico-hora"></small></h2>
+        <div class="grafico-horas" id="grafico-horas"></div>
+        <div class="legenda">
+          <span><i class="ponto entrada"></i>Entradas</span>
+          <span><i class="ponto saida"></i>Saídas</span>
+        </div>
+      </div>
+
+      <div class="painel">
+        <h2>Entradas x Saídas (hoje)</h2>
+        <div class="donut-wrap">
+          <div class="donut" id="donut"><span id="donut-total">0</span></div>
+          <ul class="donut-legenda">
+            <li><i class="ponto entrada"></i>Entradas <strong id="donut-entradas">0</strong></li>
+            <li><i class="ponto saida"></i>Saídas <strong id="donut-saidas">0</strong></li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="painel">
+        <h2>Últimos 7 dias</h2>
+        <div class="grafico-dias" id="grafico-dias"></div>
+      </div>
+
+      <div class="painel">
+        <h2>Veículos mais frequentes</h2>
+        <ul class="ranking" id="ranking"></ul>
+      </div>
+    </section>
+
     <div class="grid">
 
       <!-- Leitor de QR Code -->
