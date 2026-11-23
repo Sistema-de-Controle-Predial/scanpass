@@ -107,12 +107,7 @@ class LeitorQRCode:
 
     # ---------- leitura ----------
     @staticmethod
-    def _ler(img):
-        try:
-            res = zxingcpp.read_barcodes(img, formats=zxingcpp.BarcodeFormat.QRCode)
-        except (TypeError, AttributeError):
-            res = zxingcpp.read_barcodes(img)
-        return [r for r in res if r.text]   # ignora leituras vazias
+    
 
     def _localizar(self, img):
         """Quadriláteros de possíveis QR Codes (decodificados ou não)."""
@@ -123,7 +118,12 @@ class LeitorQRCode:
         if not ok or pts is None:
             return []
         return [np.asarray(p, dtype=float).reshape(-1, 2) for p in pts]
-
+    def _ler(img):
+        try:
+            res = zxingcpp.read_barcodes(img, formats=zxingcpp.BarcodeFormat.QRCode)
+        except (TypeError, AttributeError):
+            res = zxingcpp.read_barcodes(img)
+        return [r for r in res if r.text]   # ignora leituras vazias
     def _registrar(self, nome, resultados, S, O):
         """Pontos da imagem lida -> coords do frame:  frame = ponto / S + O."""
         self.ultimo_filtro = nome
@@ -322,6 +322,27 @@ class LeitorQRCode:
             cap.release()
             cv2.destroyAllWindows()
             self._rodando = False
+
+    def ler_dados(self, timeout=None):
+        """Aguarda e RETORNA o texto do primeiro QR Code novo lido pela câmera.
+
+        timeout: tempo máximo de espera em segundos (None = espera indefinidamente).
+        Retorna None se o tempo esgotar ou se a janela for fechada com 'q'.
+        O passo/filtro que fez a leitura fica em self.ultimo_filtro.
+        """
+        import threading
+
+        temporizador = None
+        if timeout is not None:
+            temporizador = threading.Timer(timeout, self.parar)
+            temporizador.start()
+        leituras = self.ler()
+        try:
+            return next(leituras, None)
+        finally:
+            if temporizador:
+                temporizador.cancel()
+            leituras.close()   # garante que a câmera e a janela sejam liberadas
 
 
 if __name__ == "__main__":
