@@ -14,6 +14,30 @@
 
   <main class="container">
 
+    <!-- Leitor de QR Code -->
+      <section class="painel">
+        <h2>Leitor de QR Code</h2>
+
+        <div class="tipo-acesso">
+          <label><input type="radio" name="tipo" value="entrada" checked /> Entrada</label>
+          <label><input type="radio" name="tipo" value="saida" /> Saída</label>
+        </div>
+
+        <div id="leitor"></div>
+
+        <div class="botoes">
+          <button id="btn-iniciar">Iniciar câmera</button>
+          <button id="btn-parar" class="secundario" disabled>Parar</button>
+        </div>
+
+        <div class="manual">
+          <input type="text" id="input-manual" placeholder="Ou digite o código do QR manualmente" />
+          <button id="btn-manual">Registrar</button>
+        </div>
+
+        <div id="resultado" class="resultado oculto"></div>
+      </section>
+
     <!-- Estatísticas -->
     <section class="cards">
       <div class="card">
@@ -64,31 +88,7 @@
     </section>
 
     <div class="grid">
-
-      <!-- Leitor de QR Code -->
-      <section class="painel">
-        <h2>Leitor de QR Code</h2>
-
-        <div class="tipo-acesso">
-          <label><input type="radio" name="tipo" value="entrada" checked /> Entrada</label>
-          <label><input type="radio" name="tipo" value="saida" /> Saída</label>
-        </div>
-
-        <div id="leitor"></div>
-
-        <div class="botoes">
-          <button id="btn-iniciar">Iniciar câmera</button>
-          <button id="btn-parar" class="secundario" disabled>Parar</button>
-        </div>
-
-        <div class="manual">
-          <input type="text" id="input-manual" placeholder="Ou digite o código do QR manualmente" />
-          <button id="btn-manual">Registrar</button>
-        </div>
-
-        <div id="resultado" class="resultado oculto"></div>
-      </section>
-
+      
       <!-- Histórico -->
       <section class="painel">
         <h2>Últimos acessos</h2>
