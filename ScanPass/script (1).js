@@ -95,13 +95,15 @@ function normalizarTipo(tipo) {
 // Converte um registro da API para o formato usado pela tabela e pelo dashboard:
 // { id, placa, morador, tipo: "entrada" | "saida", data_hora (ISO), bloco, apartamento, status }
 function acessoDoRegistro(reg) {
+  const tipoBruto = String(reg.tipo_movimento || "").toLowerCase();
   return {
     id: reg.id,
     placa: reg.placa || "",
     morador: reg.morador ? reg.morador.nome : "Visitante",
-    tipo: String(reg.tipo_movimento).toLowerCase(),
-    // a API manda microssegundos ("...11.858187"); mantém só 3 casas para todo navegador entender
-    data_hora: String(reg.data_hora).replace(/(\.\d{3})\d+/, "$1"),
+    tipo: tipoBruto === "chegada" ? "entrada" : tipoBruto,
+    data_hora: reg.data_hora
+      ? String(reg.data_hora).replace(/(\.\d{3})\d+/, "$1")
+      : new Date().toISOString(),
     bloco: reg.morador ? reg.morador.bloco : "",
     apartamento: reg.morador ? reg.morador.apartamento : "",
     status: reg.status_autorizacao,
@@ -425,7 +427,7 @@ async function iniciarCamera() {
   try {
     await leitor.start(
       { facingMode: "environment" },
-      { fps: 10, qrbox: { width: 220, height: 220 } },
+      { fps: 10, qrbox: { width: 500, height: 500 } },
       texto => processarCodigo(texto)
     );
     el.btnIniciar.disabled = true;

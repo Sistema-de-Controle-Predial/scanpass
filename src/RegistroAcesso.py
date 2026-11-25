@@ -4,6 +4,7 @@ from pathlib import Path
 from typing import Any, Dict, Iterable, List, Optional
 import threading
 import atexit
+import logging
 
 import os
 
@@ -49,6 +50,7 @@ class RegistroAcesso:
     _contador_id = 0
     _contador_pronto = False
     _trava = threading.RLock()
+    _banco: Optional[Any] = None               # BancoDados; se definido, substitui as planilhas
 
     def __init__(
         self,
@@ -74,6 +76,12 @@ class RegistroAcesso:
     observacao = Utilitarios._somente_leitura("_observacao")
 
     # ---------------- configuração ----------------
+    @classmethod
+    def configurar_banco(cls, banco: Optional[Any]) -> None:
+        """Passa a gravar/consultar no PostgreSQL (BancoDados). None volta para as planilhas."""
+        with cls._trava:
+            cls._banco = banco
+
     @classmethod
     def configurar_planilha(
         cls,
@@ -104,6 +112,15 @@ class RegistroAcesso:
         fila para uma nova tentativa (chame de novo ou use descarregar()).
         """
         cls = RegistroAcesso
+        if cls._banco is not None:
+            if self._id is not None:      # já foi gravado
+                return True
+            try:
+                self._id = cls._banco.salvar_registro(self)
+                return True
+            except Exception:
+                logging.getLogger(__name__).exception("Falha ao gravar registro no banco")
+                return False
         try:
             with cls._trava:
                 if self._id is None:
@@ -231,6 +248,8 @@ class RegistroAcesso:
         Lê os arquivos do mais novo para o mais antigo e para assim que reúne
         `limite` registros, então consultar os últimos acessos não abre o histórico inteiro.
         """
+        if cls._banco is not None:
+            return cls._banco.buscar_registros(placas=placas, limite=limite)
         filtro = set(placas) if placas is not None else None
         with cls._trava:
             itens = [r for r in cls._memoria + cls._pendentes if filtro is None or r.placa in filtro]
